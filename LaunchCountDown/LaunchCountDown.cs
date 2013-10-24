@@ -19,7 +19,7 @@ namespace LaunchCountDown
         public FXGroup countdownFx = null;
         public FXGroup LaunchAbortedFx = null;
         private float countDownStarted;
-        private float countDownDuration = 36;
+        private float countDownDuration = 39.0f;
 
         /// <summary>
         /// Called during the Part startup.
@@ -85,16 +85,25 @@ namespace LaunchCountDown
 
         private IEnumerator<WaitForSeconds> StartCountDown()
         {
-            ScreenMessages.PostScreenMessage("Launch in : ", countDownDuration+1, ScreenMessageStyle.UPPER_CENTER);
-
+            ScreenMessages.PostScreenMessage("Launch in : ", countDownDuration, ScreenMessageStyle.UPPER_CENTER);
+                        
             while ((Time.time - countDownStarted) < countDownDuration)
             {
-                float remaining = countDownDuration - (Time.time - countDownStarted);
-                ScreenMessages.PostScreenMessage(remaining.ToString("#0"), 1.0f, ScreenMessageStyle.UPPER_CENTER);
+                float remaining = (countDownDuration - 2.0f) - (Time.time - countDownStarted);
+
+                if (remaining > 0)
+                {
+                    ScreenMessages.PostScreenMessage(remaining.ToString("#0"), 1.0f, ScreenMessageStyle.UPPER_CENTER);
+                }
+                else
+                {
+                    ScreenMessages.PostScreenMessage("", 1.0f, ScreenMessageStyle.UPPER_CENTER);
+                }
+
                 yield return new WaitForSeconds(1.0f);
             }
 
-            ScreenMessages.PostScreenMessage("LIFTOFF !", 2, ScreenMessageStyle.UPPER_CENTER);
+            ScreenMessages.PostScreenMessage("LIFTOFF !", 2.0f, ScreenMessageStyle.UPPER_CENTER);
             Staging.ActivateNextStage();
         }
 
@@ -120,24 +129,44 @@ namespace LaunchCountDown
 
         public void StartLaunchSequence()
         {
-            countdownApolloFx.audio.Play();
-            //countdownFx.audio.Play();
+            if (LaunchUI._audioSet == 0)
+            {
+                countDownDuration = 39.0f;
+                countdownApolloFx.audio.Play();
+            }
+            else
+            {
+                countDownDuration = 17.0f;
+                countdownFx.audio.Play();
+            }
+            
+            LaunchAbortedApolloFx.audio.Stop();
+            LaunchAbortedFx.audio.Stop();
+
             LaunchUI._buttonPushed2 = false;
             LaunchUI._launchSequenceIsActive = true;
-            LaunchAbortedApolloFx.audio.Stop();
-            //LaunchAbortedFx.audio.Stop();
+            
             countDownStarted = Time.time;
             StartCoroutine(StartCountDown());
         }
 
         public void AbortLaunchSequence()
         {
-            LaunchAbortedApolloFx.audio.Play();
-            //LaunchAbortedFx.audio.Play();
+            if (LaunchUI._audioSet == 0)
+            {
+                LaunchAbortedApolloFx.audio.Play();
+            }
+            else
+            {
+                LaunchAbortedFx.audio.Play();
+            }
+
+            countdownApolloFx.audio.Stop();
+            countdownFx.audio.Stop();
+
             LaunchUI._buttonPushed = false;
             LaunchUI._launchSequenceIsActive = false;
-            countdownApolloFx.audio.Stop();
-            //countdownFx.audio.Stop();
+            
             StopAllCoroutines();
             ScreenMessages.PostScreenMessage("LAUNCH ABORTED !!!", 6, ScreenMessageStyle.UPPER_CENTER);
         }
