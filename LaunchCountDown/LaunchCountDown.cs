@@ -18,8 +18,11 @@ namespace LaunchCountDown
         public FXGroup LaunchAbortedApolloFx = null;
         public FXGroup countdownFx = null;
         public FXGroup LaunchAbortedFx = null;
+        public FXGroup countdownKerbalizedFx = null;
+        public FXGroup LaunchAbortedKerbalizedFx = null;
         private float countDownStarted;
-        private float countDownDuration = 39.0f;
+        private float countDownDuration;
+        private float countDownFineTune;
 
         /// <summary>
         /// Called during the Part startup.
@@ -61,6 +64,20 @@ namespace LaunchCountDown
             LaunchAbortedFx.audio.clip = GameDatabase.Instance.GetAudioClip("LaunchCountDown/Sounds/LaunchAborted");
             LaunchAbortedFx.audio.loop = false;
 
+            countdownKerbalizedFx.audio = gameObject.AddComponent<AudioSource>();
+            countdownKerbalizedFx.audio.volume = GameSettings.VOICE_VOLUME;
+            countdownKerbalizedFx.audio.panLevel = 0;
+            countdownKerbalizedFx.audio.Stop();
+            countdownKerbalizedFx.audio.clip = GameDatabase.Instance.GetAudioClip("LaunchCountDown/Sounds/KerbalizedCountDown");
+            countdownKerbalizedFx.audio.loop = false;
+
+            LaunchAbortedKerbalizedFx.audio = gameObject.AddComponent<AudioSource>();
+            LaunchAbortedKerbalizedFx.audio.volume = GameSettings.VOICE_VOLUME;
+            LaunchAbortedKerbalizedFx.audio.panLevel = 0;
+            LaunchAbortedKerbalizedFx.audio.Stop();
+            LaunchAbortedKerbalizedFx.audio.clip = GameDatabase.Instance.GetAudioClip("LaunchCountDown/Sounds/KerbalizedLaunchAborted");
+            LaunchAbortedKerbalizedFx.audio.loop = false;
+
             base.OnStart(state); // Allow OnStart to do what it usually does.
         }
 
@@ -89,7 +106,7 @@ namespace LaunchCountDown
                         
             while ((Time.time - countDownStarted) < countDownDuration)
             {
-                float remaining = (countDownDuration - 2.0f) - (Time.time - countDownStarted);
+                float remaining = (countDownDuration - countDownFineTune) - (Time.time - countDownStarted);
 
                 if (remaining > 0)
                 {
@@ -97,7 +114,7 @@ namespace LaunchCountDown
                 }
                 else
                 {
-                    ScreenMessages.PostScreenMessage("", 1.0f, ScreenMessageStyle.UPPER_CENTER);
+                    ScreenMessages.PostScreenMessage("All engines running...", 1.0f, ScreenMessageStyle.UPPER_CENTER);
                 }
 
                 yield return new WaitForSeconds(1.0f);
@@ -131,15 +148,24 @@ namespace LaunchCountDown
         {
             if (LaunchUI._audioSet == 0)
             {
+                countDownDuration = 23.0f;
+                countDownFineTune = 4.0f;
+                countdownKerbalizedFx.audio.Play();
+            }
+            else if (LaunchUI._audioSet == 1)
+            {
                 countDownDuration = 39.0f;
+                countDownFineTune = 2.0f;
                 countdownApolloFx.audio.Play();
             }
             else
             {
                 countDownDuration = 17.0f;
+                countDownFineTune = 2.0f;
                 countdownFx.audio.Play();
             }
-            
+
+            LaunchAbortedKerbalizedFx.audio.Stop();
             LaunchAbortedApolloFx.audio.Stop();
             LaunchAbortedFx.audio.Stop();
 
@@ -154,6 +180,10 @@ namespace LaunchCountDown
         {
             if (LaunchUI._audioSet == 0)
             {
+                LaunchAbortedKerbalizedFx.audio.Play();
+            }
+            else if (LaunchUI._audioSet == 1)
+            {
                 LaunchAbortedApolloFx.audio.Play();
             }
             else
@@ -161,6 +191,7 @@ namespace LaunchCountDown
                 LaunchAbortedFx.audio.Play();
             }
 
+            countdownKerbalizedFx.audio.Stop();
             countdownApolloFx.audio.Stop();
             countdownFx.audio.Stop();
 

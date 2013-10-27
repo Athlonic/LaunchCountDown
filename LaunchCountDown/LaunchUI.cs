@@ -121,15 +121,16 @@ namespace LaunchCountDown
             }
             
             string _audioSet_name = "";
-            if (_audioSet == 0) _audioSet_name = "Apollo";
-            if (_audioSet == 1) _audioSet_name = "English";
+            if (_audioSet == 0) _audioSet_name = "Kerbalish";
+            if (_audioSet == 1) _audioSet_name = "Apollo";
+            if (_audioSet == 2) _audioSet_name = "English";
 
             GUILayout.Label(_audioSet_name, _labelStyle);
 
             if (GUILayout.Button("►", _buttonStyle))
             {
                 _audioSet++;
-                if (_audioSet > 1) _audioSet = 1;
+                if (_audioSet > 2) _audioSet = 2;
             }
             
             GUILayout.EndHorizontal();

@@ -49,7 +49,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AudioSet.cs" />
     <Compile Include="Extensions\PartExtensions.cs" />
     <Compile Include="Extensions\RectExtensions.cs" />
     <Compile Include="LaunchCountDown.cs">
