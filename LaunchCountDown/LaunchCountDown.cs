@@ -303,9 +303,6 @@ namespace LaunchCountDown
             LaunchUI._buttonPushed2 = false;
             LaunchUI._launchSequenceIsActive = true;
 
-            Debug.Log("[LCD]: StartLaunchSequence, is active ? = " + LaunchUI._launchSequenceIsActive.ToString());
-            Debug.Log("[LCD]: StartLaunchSequence, clip_counter = " + clip_counter);
-
             foreach (EventSource events in eventsource_list)
             {
                 if (events.audiosource.isPlaying)
@@ -317,6 +314,7 @@ namespace LaunchCountDown
             }
 
             StartCoroutine(StartCountDown());
+            Debug.Log("[LCD]: Starting launch sequence ...");
         }
 
         public void AbortLaunchSequence()
@@ -337,6 +335,7 @@ namespace LaunchCountDown
             StopAllCoroutines();
             ScreenMessages.PostScreenMessage("LAUNCH ABORTED !!!", 6, ScreenMessageStyle.UPPER_CENTER);
             eventsource_list[0].event_player.audio.Play(); // Launch aborted audio
+            Debug.Log("[LCD]: Launch sequence aborted.");
         }
     }
 }

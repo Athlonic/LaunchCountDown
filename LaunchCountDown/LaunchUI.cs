@@ -85,6 +85,9 @@ namespace LaunchCountDown
                 if (_launchSequenceIsActive == false)
                     onButtonPush();
             }
+
+            GUILayout.Label("Settings coming back, ... soon(tm)", _labelStyle);
+
             //if (GUILayout.Button("settings", _buttonStyle))
             //{
             //    if (_launchSequenceIsActive == false)
