@@ -21,16 +21,16 @@ namespace LaunchCountDown
         public string current_clip;
     }
 
+    // MAIN
     public class LaunchCountDown : PartModule
     {
         private List<ClipSource> clipsource_list = new List<ClipSource>();
         private Dictionary<string, AudioClip> dict_clip_samples = new Dictionary<string, AudioClip>();
         private Dictionary<AudioClip, string> dict_clip_samples2 = new Dictionary<AudioClip, string>();
-
         
         // Audio files folders
         private string dir_apollo11_countdown = "LaunchCountDown/Sounds/Apollo_11/CountDown/";
-        //private string dir_apollo11 = "LaunchCountDown/Sounds/Apollo_11/Events/Apollo_11_Aborted";
+        //private string dir_apollo11_events = "LaunchCountDown/Sounds/Apollo_11/Events/";
 
         // Time managers
         private int clip_counter;
@@ -44,7 +44,7 @@ namespace LaunchCountDown
         /// </summary>
         public override void OnStart(PartModule.StartState state)
         {
-            if (state == StartState.Editor || state == StartState.None) return; // Don't play sounds in the editor view.
+            if (state == StartState.Editor || state == StartState.None || this.vessel.isActiveVessel == false) return; // Don't do audio thing in the editor view or if part is not on active vessel
 
             Debug.Log("[LCD]: OnStart ...");
 
@@ -59,47 +59,18 @@ namespace LaunchCountDown
         {
             if (LaunchUI._buttonPushed == true && LaunchUI._launchSequenceIsActive == false)
             {
-                StartLaunchSequence();
+                StartLaunchSequence();                
             }
 
             if (LaunchUI._buttonPushed2 == true && LaunchUI._launchSequenceIsActive == true)
             {
-                //AbortLaunchSequence();
+                AbortLaunchSequence();
             }
 
             base.OnUpdate();
         }
 
-        //public override void OnFixedUpdate()
-        //{
-        //    while (LaunchUI._launchSequenceIsActive)
-        //    {
-        //        //for (int k = clipsource_list.Count - 1; k >= 0; k--)
-        //        if (clip_counter + 1 >= clipsource_list.Count) // || clipsource_list[clip_counter + 1].clip_player.audio.isPlaying == false)
-        //        {
-
-        //            clipsource_list[clip_counter].clip_player.audio.Play();
-
-        //            Debug.Log("[LCD]: Fxupdate, playing : " + clip_counter + "audio clip.");
-
-        //            clip_counter--;
-
-        //            if (clip_counter < 0)
-        //            {
-        //                LaunchUI._launchSequenceIsActive = false;
-
-        //                Debug.Log("[LCD]: StartLaunchSequence, is active = " + LaunchUI._launchSequenceIsActive.ToString() + "clip_counter = " + clip_counter);
-        //            }
-        //        }
-        //    }
-            
-            
-
-
-        //    base.OnFixedUpdate();
-        //}
-
-        // Editor description
+        // Editor LaunchClamp description
         public override string GetInfo()
         {
             return "Launch CountDown by Athlonic Electronics™";
@@ -109,7 +80,7 @@ namespace LaunchCountDown
         [KSPAction("Start Countdown")]
         public void CountDownAction(KSPActionParam param)
         {
-            //if (LaunchUI._launchSequenceIsActive == false)
+            if (LaunchUI._launchSequenceIsActive == false)
             {
                 StartLaunchSequence();
             }
@@ -119,21 +90,13 @@ namespace LaunchCountDown
         [KSPAction("Abort Launch !")]
         public void AbortLaunchAction(KSPActionParam param)
         {
-            //if (LaunchUI._launchSequenceIsActive == true)
+            if (LaunchUI._launchSequenceIsActive == true)
             {
-                //AbortLaunchSequence();
-                
-
-                foreach (ClipSource clip in clipsource_list)
-                {
-                    clip.audiosource.Play();
-                    
-                    Debug.Log("[LCD]: Start CountDown ... playing : " + clip.ToString());
-                }
-                
+                AbortLaunchSequence();
             }
         }
 
+        // Loading audiofiles to collections
         public void LoadAudioClips()
         {
             if (clipsource_list.Count == 0)
@@ -156,21 +119,14 @@ namespace LaunchCountDown
                 }
                 Debug.Log("[LCD]: All clips Loaded:" + dict_clip_samples.Count + " audio clips");
 
-                foreach (string clip in dict_clip_samples.Keys)
-                {
-                    Debug.Log("[LCD]: Clip :" + clip + " in collection");
-                    
-                    //AudioClip _audioclip = new AudioClip();
-
-                    //if (dict_clip_samples.TryGetValue(clip, out _audioclip))
-                    //{
-                        
-                    //}
-                }
-
+                //foreach (string clip in dict_clip_samples.Keys)
+                //{
+                //    Debug.Log("[LCD]: Clip :" + clip + " in collection");
+                //}
              }
         }
 
+        // Setting audiosources parameters
         public void SetAudioClips()
         {
             for (int i = dict_clip_samples.Count - 1; i >= 0; i--)
@@ -191,15 +147,12 @@ namespace LaunchCountDown
                 {
                     set_clip_clip(clipsource_list[x]);  //set clip
                 }
-
-            }
-            
+            }            
 
             Debug.Log("[LCD]: SetAudioClips :" + clipsource_list.Count + " clips in clipsource_list");
-
-            
         }
 
+        // Resgistering audioclips
         private void set_clip_clip(ClipSource clipsource)
         {
             if (clipsource.current_clip == "Default")
@@ -214,42 +167,46 @@ namespace LaunchCountDown
                 if (dict_clip_samples2.TryGetValue(clipsource.audiosource.clip, out s))
                 {
                     clipsource.current_clip = s;
-                    Debug.Log("[LCD] Default AudioClip set :: current_clip = " + s);
+                    //Debug.Log("[LCD] Default AudioClip set :: current_clip = " + s);
                 }
             }
         }
 
+        // Managing launch sequence
         private IEnumerator<WaitForSeconds> StartCountDown()
         {
-            ScreenMessages.PostScreenMessage("Launch in : ", 6.0f, ScreenMessageStyle.UPPER_CENTER);
-
-            while (LaunchUI._launchSequenceIsActive)
-            {
+            while (LaunchUI._launchSequenceIsActive && clip_counter >= 0)
+            {                
                 if (clip_counter >= 0) // || clipsource_list[clip_counter + 1].clip_player.audio.isPlaying == false)
                 {
-                    ScreenMessages.PostScreenMessage(clip_counter.ToString("#0"), 1.0f, ScreenMessageStyle.UPPER_CENTER);
-                    clip_counter--;
+                    ScreenMessages.PostScreenMessage("Launch in : ", 1.0f, ScreenMessageStyle.UPPER_CENTER);
+                    if (clip_counter == 38 || clip_counter >= 36) ScreenMessages.PostScreenMessage("Launch sequence started...", 1.0f, ScreenMessageStyle.UPPER_CENTER);
+                    else if (clip_counter == 35 || clip_counter >= 33) ScreenMessages.PostScreenMessage("Now on internal power...", 1.0f, ScreenMessageStyle.UPPER_CENTER);
+                    else if (clip_counter == 17 || clip_counter == 16) ScreenMessages.PostScreenMessage("2nd stage tanks now pressurized", 1.0f, ScreenMessageStyle.UPPER_CENTER);
+                    else if (clip_counter == 8 || clip_counter == 7) ScreenMessages.PostScreenMessage("Ignition sequence start", 1.0f, ScreenMessageStyle.UPPER_CENTER);
+                    else ScreenMessages.PostScreenMessage(clip_counter.ToString("#0"), 1.0f, ScreenMessageStyle.UPPER_CENTER);
 
+                    clip_counter--;
+                                        
                     clipsource_list[clip_counter + 1].clip_player.audio.Play();
 
-                    Debug.Log("[LCD]: Fxupdate, playing : " + (clip_counter + 1) + "audio clip.");
-
-                }
-
-                if (clip_counter < 0)
-                {
-                    LaunchUI._launchSequenceIsActive = false;
-                    
-                    ScreenMessages.PostScreenMessage("All engines running...", 1.0f, ScreenMessageStyle.UPPER_CENTER);
-
-                    Debug.Log("[LCD]: StartLaunchSequence, is active = " + LaunchUI._launchSequenceIsActive.ToString() + "clip_counter = " + clip_counter);
-                }                
+                    //Debug.Log("[LCD]: StartCountDown(), playing : " + (clip_counter + 1) + "audio clip.");
+                }               
 
                 yield return new WaitForSeconds(1.0f);
             }
 
-            ScreenMessages.PostScreenMessage("LIFTOFF !", 2.0f, ScreenMessageStyle.UPPER_CENTER);
-            //Staging.ActivateNextStage();
+            if (LaunchUI._launchSequenceIsActive && clip_counter < 0)
+            {
+                yield return new WaitForSeconds(1.0f);
+
+                ScreenMessages.PostScreenMessage("All engines running...", 1.0f, ScreenMessageStyle.UPPER_CENTER);
+
+                yield return new WaitForSeconds(2.0f);
+
+                ScreenMessages.PostScreenMessage("LIFTOFF !", 2.0f, ScreenMessageStyle.UPPER_CENTER);
+                Staging.ActivateNextStage();
+            }            
         }
 
         public void StartLaunchSequence()
@@ -259,38 +216,29 @@ namespace LaunchCountDown
             LaunchUI._buttonPushed2 = false;
             LaunchUI._launchSequenceIsActive = true;
 
+            Debug.Log("[LCD]: StartLaunchSequence, is active ? = " + LaunchUI._launchSequenceIsActive.ToString());
             Debug.Log("[LCD]: StartLaunchSequence, clip_counter = " + clip_counter);
-            //Debug.Log("[LCD]: StartLaunchSequence, previous audio playing = " + clipsource_list[clip_counter + 1].clip_player.audio.isPlaying.ToString());
-            Debug.Log("[LCD]: StartLaunchSequence, is active = " + LaunchUI._launchSequenceIsActive.ToString());
-
-            //countDownStarted = Time.time;
+                        
             StartCoroutine(StartCountDown());
         }
 
-        //public void AbortLaunchSequence()
-        //{
-        //    if (LaunchUI._audioSet == 0)
-        //    {
-        //        LaunchAbortedKerbalizedFx.audio.Play();
-        //    }
-        //    else if (LaunchUI._audioSet == 1)
-        //    {
-        //        LaunchAbortedApolloFx.audio.Play();
-        //    }
-        //    else
-        //    {
-        //        LaunchAbortedFx.audio.Play();
-        //    }
+        public void AbortLaunchSequence()
+        {
+            LaunchUI._buttonPushed = false;
+            LaunchUI._launchSequenceIsActive = false;
 
-        //    countdownKerbalizedFx.audio.Stop();
-        //    countdownApolloFx.audio.Stop();
-        //    countdownFx.audio.Stop();
+            foreach (ClipSource clip in clipsource_list)
+            {
+                if (clip.audiosource.isPlaying)
+                {
+                    clip.audiosource.Stop();
 
-        //    LaunchUI._buttonPushed = false;
-        //    LaunchUI._launchSequenceIsActive = false;
+                    Debug.Log("[LCD]: Aborting launch sequence ... Stoping :" + clip.ToString());
+                }
+            }
             
-        //    StopAllCoroutines();
-        //    ScreenMessages.PostScreenMessage("LAUNCH ABORTED !!!", 6, ScreenMessageStyle.UPPER_CENTER);
-        //}
+            StopAllCoroutines();
+            ScreenMessages.PostScreenMessage("LAUNCH ABORTED !!!", 6, ScreenMessageStyle.UPPER_CENTER);
+        }
     }
 }

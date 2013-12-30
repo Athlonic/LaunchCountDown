@@ -85,11 +85,11 @@ namespace LaunchCountDown
                 if (_launchSequenceIsActive == false)
                     onButtonPush();
             }
-            if (GUILayout.Button("settings", _buttonStyle))
-            {
-                if (_launchSequenceIsActive == false)
-                    onSettingsPush();
-            }
+            //if (GUILayout.Button("settings", _buttonStyle))
+            //{
+            //    if (_launchSequenceIsActive == false)
+            //        onSettingsPush();
+            //}
             GUILayout.EndVertical();
 
             GUI.DragWindow(new Rect(0f, 0f, _windowStyle.fixedWidth, 30f));
