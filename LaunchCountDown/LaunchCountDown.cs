@@ -21,22 +21,38 @@ namespace LaunchCountDown
         public string current_clip;
     }
 
+    // Class to manage audio events
+    public class EventSource
+    {
+        public GameObject event_player;
+        public string event_name;
+        public AudioSource audiosource;
+        public string current_event;
+    }
+
     // MAIN
     public class LaunchCountDown : PartModule
     {
+        // Audio collections
         private List<ClipSource> clipsource_list = new List<ClipSource>();
+        private List<EventSource> eventsource_list = new List<EventSource>();
         private Dictionary<string, AudioClip> dict_clip_samples = new Dictionary<string, AudioClip>();
         private Dictionary<AudioClip, string> dict_clip_samples2 = new Dictionary<AudioClip, string>();
-        
+        private Dictionary<string, AudioClip> dict_event_samples = new Dictionary<string, AudioClip>();
+        private Dictionary<AudioClip, string> dict_event_samples2 = new Dictionary<AudioClip, string>();
+
         // Audio files folders
         private string dir_apollo11_countdown = "LaunchCountDown/Sounds/Apollo_11/CountDown/";
-        //private string dir_apollo11_events = "LaunchCountDown/Sounds/Apollo_11/Events/";
+        private string dir_apollo11_events = "LaunchCountDown/Sounds/Apollo_11/Events/";
 
-        // Time managers
-        private int clip_counter;
-        //private float countDownStarted;
-        //private float countDownDuration;
-        //private float countDownFineTune;
+        // Audio files events names
+        private string aborted = "Aborted";
+        private string engine_run = "AllEngineRuning";
+        private string liftoff = "LiftOff";
+        private string tower_cleared = "TowerCleared";
+
+        // Sequence step manager
+        private int clip_counter;        
 
         /// <summary>
         /// Called during the Part startup.
@@ -44,9 +60,9 @@ namespace LaunchCountDown
         /// </summary>
         public override void OnStart(PartModule.StartState state)
         {
-            if (state == StartState.Editor || state == StartState.None || this.vessel.isActiveVessel == false) return; // Don't do audio thing in the editor view or if part is not on active vessel
+            if (state == StartState.Editor || state == StartState.None || this.vessel.isActiveVessel == false) return; // Don't do audio thing in the editor view or if part is not on active vessel.
 
-            Debug.Log("[LCD]: OnStart ...");
+            Debug.Log("[LCD]: OnStart, Doing stuff...");
 
             LoadAudioClips();
 
@@ -107,7 +123,7 @@ namespace LaunchCountDown
                 //Debug.Log("[LCD]: Loading clips :" + file_name + " audio clip");
                 //Debug.Log("[LCD]: Loading clips :" + (dir_apollo11_countdown + file_name) + " audio clip");
 
-                while (GameDatabase.Instance.ExistsAudioClip(dir_apollo11_countdown + file_name) == true)
+                while (GameDatabase.Instance.ExistsAudioClip(dir_apollo11_countdown + file_name))
                 {
                     dict_clip_samples.Add(file_name.ToString(), GameDatabase.Instance.GetAudioClip(file_path));
                     dict_clip_samples2.Add(GameDatabase.Instance.GetAudioClip(file_path), file_name.ToString());
@@ -123,7 +139,37 @@ namespace LaunchCountDown
                 //{
                 //    Debug.Log("[LCD]: Clip :" + clip + " in collection");
                 //}
-             }
+            }
+
+            if (eventsource_list.Count == 0)
+            {
+                string[] event_name_array = {aborted, engine_run, liftoff, tower_cleared};                
+
+                //Debug.Log("[LCD]: Loading clips :" + file_name + " audio clip");
+                //Debug.Log("[LCD]: Loading clips :" + (dir_apollo11_countdown + file_name) + " audio clip");
+
+                foreach (string event_name in event_name_array)
+                {
+                    string file_path = dir_apollo11_events + event_name;
+
+                    if (GameDatabase.Instance.ExistsAudioClip(dir_apollo11_events + event_name))
+                    {
+                        dict_event_samples.Add(event_name.ToString(), GameDatabase.Instance.GetAudioClip(file_path));
+                        dict_event_samples2.Add(GameDatabase.Instance.GetAudioClip(file_path), event_name.ToString());
+
+                        //Debug.Log("[LCD]: Event Loaded, next:" + event_name);
+                        //Debug.Log("[LCD]: Event Loaded, next:" + file_path);
+                    }                    
+                }
+
+                //Debug.Log("[LCD]: All events Loaded:" + dict_event_samples.Count + " audio events");
+
+                //foreach (string events in dict_event_samples.Keys)
+                //{
+                //    Debug.Log("[LCD]: Events :" + events + " in collection");
+                //}
+            }
+
         }
 
         // Setting audiosources parameters
@@ -135,8 +181,7 @@ namespace LaunchCountDown
 
                 int x = clipsource_list.Count - 1;
                 
-                clipsource_list[x].clip_player = new GameObject();
-                //clipsource_list[x].clip_player.name = "rbr_beep_player_" + clipsource_list.Count;
+                clipsource_list[x].clip_player = new GameObject();                
                 //clipsource_list[x].clip_name = clipsource_list.Count.ToString();
                 clipsource_list[x].audiosource = clipsource_list[x].clip_player.AddComponent<AudioSource>();
                 clipsource_list[x].audiosource.volume = GameSettings.VOICE_VOLUME;
@@ -150,6 +195,27 @@ namespace LaunchCountDown
             }            
 
             Debug.Log("[LCD]: SetAudioClips :" + clipsource_list.Count + " clips in clipsource_list");
+
+            for (int i = dict_event_samples.Count - 1; i >= 0; i--)
+            {
+                eventsource_list.Add(new EventSource());
+
+                int x = eventsource_list.Count - 1;
+
+                eventsource_list[x].event_player = new GameObject();
+                //eventsource_list[x].clip_name = eventsource_list.Count.ToString();
+                eventsource_list[x].audiosource = eventsource_list[x].event_player.AddComponent<AudioSource>();
+                eventsource_list[x].audiosource.volume = GameSettings.VOICE_VOLUME;
+                eventsource_list[x].audiosource.panLevel = 0;
+                eventsource_list[x].current_event = "Default";
+
+                if (dict_event_samples.Count > 0)
+                {
+                    set_event_clip(eventsource_list[x]);  //set event
+                }
+            }
+
+            Debug.Log("[LCD]: SetAudioClips :" + eventsource_list.Count + " events in eventsource_list");
         }
 
         // Resgistering audioclips
@@ -168,6 +234,25 @@ namespace LaunchCountDown
                 {
                     clipsource.current_clip = s;
                     //Debug.Log("[LCD] Default AudioClip set :: current_clip = " + s);
+                }
+            }
+        }
+
+        private void set_event_clip(EventSource eventsource)
+        {
+            if (eventsource.current_event == "Default")
+            {
+                List<AudioClip> val_list = new List<AudioClip>();
+                foreach (AudioClip val in dict_event_samples.Values)
+                {
+                    val_list.Add(val);
+                }
+                eventsource.audiosource.clip = val_list[eventsource_list.Count - 1];
+                string s = "";
+                if (dict_event_samples2.TryGetValue(eventsource.audiosource.clip, out s))
+                {
+                    eventsource.current_event = s;
+                    //Debug.Log("[LCD] Default AudioClip set :: current_event = " + s);                    
                 }
             }
         }
@@ -198,13 +283,15 @@ namespace LaunchCountDown
 
             if (LaunchUI._launchSequenceIsActive && clip_counter < 0)
             {
+                ScreenMessages.PostScreenMessage("All engines running...", 1.0f, ScreenMessageStyle.UPPER_CENTER);
+                eventsource_list[1].event_player.audio.Play(); // All engine running audio
+
                 yield return new WaitForSeconds(1.0f);
 
-                ScreenMessages.PostScreenMessage("All engines running...", 1.0f, ScreenMessageStyle.UPPER_CENTER);
-
-                yield return new WaitForSeconds(2.0f);
-
                 ScreenMessages.PostScreenMessage("LIFTOFF !", 2.0f, ScreenMessageStyle.UPPER_CENTER);
+                eventsource_list[2].event_player.audio.PlayDelayed(0.8f); // Liftoff audio
+                eventsource_list[3].event_player.audio.PlayDelayed(3.0f); // Tower cleared audio
+
                 Staging.ActivateNextStage();
             }            
         }
@@ -218,7 +305,17 @@ namespace LaunchCountDown
 
             Debug.Log("[LCD]: StartLaunchSequence, is active ? = " + LaunchUI._launchSequenceIsActive.ToString());
             Debug.Log("[LCD]: StartLaunchSequence, clip_counter = " + clip_counter);
-                        
+
+            foreach (EventSource events in eventsource_list)
+            {
+                if (events.audiosource.isPlaying)
+                {
+                    events.audiosource.Stop();
+
+                    //Debug.Log("[LCD]: Starting launch sequence ... Stoping :" + events.ToString());
+                }
+            }
+
             StartCoroutine(StartCountDown());
         }
 
@@ -233,12 +330,13 @@ namespace LaunchCountDown
                 {
                     clip.audiosource.Stop();
 
-                    Debug.Log("[LCD]: Aborting launch sequence ... Stoping :" + clip.ToString());
+                    //Debug.Log("[LCD]: Aborting launch sequence ... Stoping :" + clip.ToString());
                 }
             }
             
             StopAllCoroutines();
             ScreenMessages.PostScreenMessage("LAUNCH ABORTED !!!", 6, ScreenMessageStyle.UPPER_CENTER);
+            eventsource_list[0].event_player.audio.Play(); // Launch aborted audio
         }
     }
 }
