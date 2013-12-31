@@ -1,5 +1,5 @@
-[0.22.0] Athlonic Electronics / LCD - Launch CountDown (Audio&Onscreen)
-v1.4 (October 27/2013)
+[0.23.0] Athlonic Electronics / LCD - Launch CountDown (Audio&Onscreen)
+v1.6 (December 31/2013)
 
 
 Bored of yelling the launch countdown yourself ?
@@ -10,11 +10,11 @@ So here comes an enhancement for your launch clamps : an authentical launch coun
 _________________________________________________________
 Installation :
 
-- You just have to install the "LaunchCountDown" folder as usual under your KSP "GameData" folder.
+- You just have to install the "LaunchCountDown" folder and the "ModuleManager.dll" file in your KSP "GameData" folder.
 
 It will upgrade your KSP stock TT18-A Launch Stability Enhancer (aka launch clamp) with a countdown feature.
-No additional parts needed thanks to the excellent "ModuleManager" plugin (included) from Ialdabaoth.
-( credits and updates here : http://forum.kerbalspaceprogram.com/showthread.php/31342-0-20-ModuleManager-1-3-for-all-your-stock-modding-needs )
+No additional parts needed thanks to the excellent "ModuleManager" plugin (included) from Ialdabaoth/Sarbian.
+( credits and updates here : http://forum.kerbalspaceprogram.com/threads/55219-Module-Manager-1-5-%28Nov-11%29 )
 
 _________________________________________________________
 How it works ?
@@ -52,6 +52,17 @@ Known issues :
 
 ________________________________________________________
 Changelog :
+
+v 1.6 :
+- Rewritten the code using 'Collections' to manage audio files
+- This also fixed the desync sequence issue when using heavy ship/mods
+- Added some screen messages accordingly to the launch sequence events
+- disabled "Kerbalized" & "Default" audio set for now (better Kerbalized version in the work)
+
+v 1.5 :
+- recompiled/checked for KSP v0.23 compatibility
+- targeting .NET 3.5 instead of 4.5
+- including ModuleManager v1.5
 
 v 1.4 :
 - Added Kerbalized audio (first pass) 
