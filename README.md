@@ -1,5 +1,5 @@
 [0.23.0] Athlonic Electronics / LCD - Launch CountDown (Audio&Onscreen)
-v1.6 (December 31/2013)
+v1.6.1 (December 31/2013)
 
 
 Bored of yelling the launch countdown yourself ?
@@ -52,6 +52,9 @@ Known issues :
 
 ________________________________________________________
 Changelog :
+
+v 1.6.1 (Hotfix) :
+- Fixed issue where audio clips were loaded for each instance of launchclamp part.
 
 v 1.6 :
 - Rewritten the code using 'Collections' to manage audio files
