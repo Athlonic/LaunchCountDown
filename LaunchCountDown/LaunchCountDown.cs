@@ -1,6 +1,6 @@
 ﻿// Kerbal Space Program Launcher countdown plug-in by Athlonic
 // Licensed under CC BY 3.0 terms: http://creativecommons.org/licenses/by-nc-sa/3.0/
-// v 1.6
+// v 1.7
 
 
 using System;
