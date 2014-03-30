@@ -1,5 +1,5 @@
 [0.23.0] Athlonic Electronics / LCD - Launch CountDown (Audio&Onscreen)
-v1.6.1 (December 31/2013)
+v1.7 (March 30/2014)
 
 
 Bored of yelling the launch countdown yourself ?
@@ -52,6 +52,10 @@ Known issues :
 
 ________________________________________________________
 Changelog :
+
+v 1.7 :
+- Added back Kerbalized audio set (made it default)
+- Plugin now clear audio collections on part unload to free up memory
 
 v 1.6.1 (Hotfix) :
 - Fixed issue where audio clips were loaded for each instance of launchclamp part.
