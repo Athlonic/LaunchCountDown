@@ -11,6 +11,7 @@ namespace LaunchCountDown
         private bool _hasInitStyles = false;
         public static bool _buttonPushed = false;
         public static bool _buttonPushed2 = false;
+        public static bool _buttonPushed3 = false;
         public static bool _launchSequenceIsActive = false;
         public static int _audioSet;
 
@@ -86,13 +87,11 @@ namespace LaunchCountDown
                     onButtonPush();
             }
 
-            GUILayout.Label("Settings coming back, ... soon(tm)", _labelStyle);
-
-            //if (GUILayout.Button("settings", _buttonStyle))
-            //{
-            //    if (_launchSequenceIsActive == false)
-            //        onSettingsPush();
-            //}
+            if (GUILayout.Button("settings", _buttonStyle))
+            {
+                if (_launchSequenceIsActive == false)
+                    onSettingsPush();
+            }
             GUILayout.EndVertical();
 
             GUI.DragWindow(new Rect(0f, 0f, _windowStyle.fixedWidth, 30f));
@@ -126,14 +125,14 @@ namespace LaunchCountDown
             string _audioSet_name = "";
             if (_audioSet == 0) _audioSet_name = "Kerbalish";
             if (_audioSet == 1) _audioSet_name = "Apollo";
-            if (_audioSet == 2) _audioSet_name = "English";
+            //if (_audioSet == 2) _audioSet_name = "English";
 
             GUILayout.Label(_audioSet_name, _labelStyle);
 
             if (GUILayout.Button("►", _buttonStyle))
             {
                 _audioSet++;
-                if (_audioSet > 2) _audioSet = 2;
+                if (_audioSet > 1) _audioSet = 1;
             }
             
             GUILayout.EndHorizontal();
@@ -184,6 +183,7 @@ namespace LaunchCountDown
         private void onBackPush()
         {
             RenderingManager.RemoveFromPostDrawQueue(0, new Callback(OnDraw3));
+            _buttonPushed3 = true;
             RenderingManager.AddToPostDrawQueue(0, OnDraw);
         }
     }

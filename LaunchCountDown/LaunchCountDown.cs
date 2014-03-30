@@ -1,6 +1,6 @@
 ﻿// Kerbal Space Program Launcher countdown plug-in by Athlonic
 // Licensed under CC BY 3.0 terms: http://creativecommons.org/licenses/by-nc-sa/3.0/
-// v 1.6
+// v 1.7
 
 
 using System;
@@ -45,8 +45,12 @@ namespace LaunchCountDown
         private Dictionary<AudioClip, string> dict_event_samples2 = new Dictionary<AudioClip, string>();
 
         // Audio files folders
+        private string dir_audio_countdown = "";
+        private string dir_audio_events = "";
         private string dir_apollo11_countdown = "LaunchCountDown/Sounds/Apollo_11/CountDown/";
         private string dir_apollo11_events = "LaunchCountDown/Sounds/Apollo_11/Events/";
+        private string dir_kerbalized_countdown = "LaunchCountDown/Sounds/Kerbalized/CountDown/";
+        private string dir_kerbalized_events = "LaunchCountDown/Sounds/Kerbalized/Events/";
 
         // Audio files events names
         private string aborted = "Aborted";
@@ -89,6 +93,23 @@ namespace LaunchCountDown
                 AbortLaunchSequence();
             }
 
+            // Clear collections and Reload audio sets when coming from UI settings
+            if (LaunchUI._buttonPushed3 == true)
+            {
+                LaunchUI._buttonPushed3 = false;
+
+                clipsource_list.Clear();
+                eventsource_list.Clear();
+
+                dict_clip_samples.Clear();
+                dict_clip_samples2.Clear();
+                dict_event_samples.Clear();
+                dict_event_samples2.Clear();
+
+                LoadAudioClips();
+                SetAudioClips();
+            }
+
             base.OnUpdate();
         }
 
@@ -121,21 +142,33 @@ namespace LaunchCountDown
         // Loading audiofiles to collections
         public void LoadAudioClips()
         {
+            if (LaunchUI._audioSet == 0)
+            {
+                dir_audio_countdown = dir_kerbalized_countdown;
+                dir_audio_events = dir_kerbalized_events;
+            }
+
+            if (LaunchUI._audioSet == 1)
+            {
+                dir_audio_countdown = dir_apollo11_countdown;
+                dir_audio_events = dir_apollo11_events;
+            }
+
             if (clipsource_list.Count == 0)
             {
                 int file_name = 0;
-                string file_path = dir_apollo11_countdown + file_name;
+                string file_path = dir_audio_countdown + file_name;
 
                 if (_debug > 1) Debug.Log("[LCD]: Loading clips :" + file_name + " audio clip");
-                if (_debug > 1) Debug.Log("[LCD]: Loading clips :" + (dir_apollo11_countdown + file_name) + " audio clip");
+                if (_debug > 1) Debug.Log("[LCD]: Loading clips :" + (dir_audio_countdown + file_name) + " audio clip");
 
-                while (GameDatabase.Instance.ExistsAudioClip(dir_apollo11_countdown + file_name))
+                while (GameDatabase.Instance.ExistsAudioClip(dir_audio_countdown + file_name))
                 {
                     dict_clip_samples.Add(file_name.ToString(), GameDatabase.Instance.GetAudioClip(file_path));
                     dict_clip_samples2.Add(GameDatabase.Instance.GetAudioClip(file_path), file_name.ToString());
 
                     file_name++;
-                    file_path = dir_apollo11_countdown + file_name;
+                    file_path = dir_audio_countdown + file_name;
                     if (_debug > 1) Debug.Log("[LCD]: Clip Loaded, next:" + file_name + " audio clip");
                     if (_debug > 1) Debug.Log("[LCD]: Clip Loaded, next:" + file_path + " audio clip");
                 }
@@ -156,15 +189,15 @@ namespace LaunchCountDown
 
                 foreach (string event_name in event_name_array)
                 {
-                    string file_path = dir_apollo11_events + event_name;
+                    string file_path = dir_audio_events + event_name;
 
                     if (_debug > 1)
                     {
                         Debug.Log("[LCD]: Loading clips :" + event_name + " audio clip");
-                        Debug.Log("[LCD]: Loading clips :" + (dir_apollo11_countdown + event_name) + " audio clip");
+                        Debug.Log("[LCD]: Loading clips :" + (dir_audio_countdown + event_name) + " audio clip");
                     }
 
-                    if (GameDatabase.Instance.ExistsAudioClip(dir_apollo11_events + event_name))
+                    if (GameDatabase.Instance.ExistsAudioClip(dir_audio_events + event_name))
                     {
                         dict_event_samples.Add(event_name.ToString(), GameDatabase.Instance.GetAudioClip(file_path));
                         dict_event_samples2.Add(GameDatabase.Instance.GetAudioClip(file_path), event_name.ToString());
@@ -282,18 +315,35 @@ namespace LaunchCountDown
             {                
                 if (clip_counter >= 0) // || clipsource_list[clip_counter + 1].clip_player.audio.isPlaying == false)
                 {
-                    ScreenMessages.PostScreenMessage("Launch in : ", 1.0f, ScreenMessageStyle.UPPER_CENTER);
-                    if (clip_counter == 38 || clip_counter >= 36) ScreenMessages.PostScreenMessage("Launch sequence started...", 1.0f, ScreenMessageStyle.UPPER_CENTER);
-                    else if (clip_counter == 35 || clip_counter >= 33) ScreenMessages.PostScreenMessage("Now on internal power...", 1.0f, ScreenMessageStyle.UPPER_CENTER);
-                    else if (clip_counter == 17 || clip_counter == 16) ScreenMessages.PostScreenMessage("2nd stage tanks now pressurized", 1.0f, ScreenMessageStyle.UPPER_CENTER);
-                    else if (clip_counter == 8 || clip_counter == 7) ScreenMessages.PostScreenMessage("Ignition sequence start", 1.0f, ScreenMessageStyle.UPPER_CENTER);
-                    else ScreenMessages.PostScreenMessage(clip_counter.ToString("#0"), 1.0f, ScreenMessageStyle.UPPER_CENTER);
+                    if (LaunchUI._audioSet == 0)
+                    {
+                        ScreenMessages.PostScreenMessage("Launch in : ", 1.0f, ScreenMessageStyle.UPPER_CENTER);
+                        if (clip_counter == 19 || clip_counter >= 16) ScreenMessages.PostScreenMessage("Launch sequence started...", 1.0f, ScreenMessageStyle.UPPER_CENTER);
+                        else if (clip_counter == 8 || clip_counter == 7 || clip_counter == 6) ScreenMessages.PostScreenMessage("Ignition sequence start", 1.0f, ScreenMessageStyle.UPPER_CENTER);
+                        else ScreenMessages.PostScreenMessage(clip_counter.ToString("#0"), 1.0f, ScreenMessageStyle.UPPER_CENTER);
 
-                    clip_counter--;
-                                        
-                    clipsource_list[clip_counter + 1].clip_player.audio.Play();
+                        clip_counter--;
 
-                    if (_debug > 1) Debug.Log("[LCD]: StartCountDown(), playing : " + (clip_counter + 1) + "audio clip.");
+                        clipsource_list[clip_counter + 1].clip_player.audio.Play();
+
+                        if (_debug > 1) Debug.Log("[LCD]: StartCountDown(), playing : " + (clip_counter + 1) + "audio clip.");
+                    }
+
+                    else if (LaunchUI._audioSet == 1)
+                    {
+                        ScreenMessages.PostScreenMessage("Launch in : ", 1.0f, ScreenMessageStyle.UPPER_CENTER);
+                        if (clip_counter == 38 || clip_counter >= 36) ScreenMessages.PostScreenMessage("Launch sequence started...", 1.0f, ScreenMessageStyle.UPPER_CENTER);
+                        else if (clip_counter == 35 || clip_counter >= 33) ScreenMessages.PostScreenMessage("Now on internal power...", 1.0f, ScreenMessageStyle.UPPER_CENTER);
+                        else if (clip_counter == 17 || clip_counter == 16) ScreenMessages.PostScreenMessage("2nd stage tanks now pressurized", 1.0f, ScreenMessageStyle.UPPER_CENTER);
+                        else if (clip_counter == 8 || clip_counter == 7) ScreenMessages.PostScreenMessage("Ignition sequence start", 1.0f, ScreenMessageStyle.UPPER_CENTER);
+                        else ScreenMessages.PostScreenMessage(clip_counter.ToString("#0"), 1.0f, ScreenMessageStyle.UPPER_CENTER);
+
+                        clip_counter--;
+
+                        clipsource_list[clip_counter + 1].clip_player.audio.Play();
+
+                        if (_debug > 1) Debug.Log("[LCD]: StartCountDown(), playing : " + (clip_counter + 1) + "audio clip.");
+                    }
                 }               
 
                 yield return new WaitForSeconds(1.0f);
@@ -354,6 +404,18 @@ namespace LaunchCountDown
             ScreenMessages.PostScreenMessage("LAUNCH ABORTED !!!", 6, ScreenMessageStyle.UPPER_CENTER);
             eventsource_list[0].event_player.audio.Play(); // Launch aborted audio
             Debug.Log("[LCD]: Launch sequence aborted.");
+        }
+
+        // Free up memory when unloading the part
+        public void OnDestroy()
+        {
+            clipsource_list.Clear();
+            eventsource_list.Clear();
+
+            dict_clip_samples.Clear();
+            dict_clip_samples2.Clear();
+            dict_event_samples.Clear();
+            dict_event_samples2.Clear();
         }
     }
 }
