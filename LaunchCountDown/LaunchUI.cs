@@ -7,13 +7,14 @@ namespace LaunchCountDown
     public class LaunchUI : PartModule
     {
         private static Rect _windowsPosition = new Rect();
-        private GUIStyle _windowStyle, _buttonStyle, _labelStyle;
+        private GUIStyle _windowStyle, _buttonStyle, _labelStyle, _toggleStyle;
         private bool _hasInitStyles = false;
         public static bool _buttonPushed = false;
         public static bool _buttonPushed2 = false;
         public static bool _buttonPushed3 = false;
         public static bool _launchSequenceIsActive = false;
         public static int _audioSet;
+        public static bool _debug;
 
         public override void OnStart(PartModule.StartState state)
         {
@@ -33,6 +34,7 @@ namespace LaunchCountDown
 
             config.SetValue("_audioSet", _audioSet);
             config.SetValue("Window Position", _windowsPosition);
+            config.SetValue("_debug", _debug);
             config.save();
         }
 
@@ -43,6 +45,7 @@ namespace LaunchCountDown
             config.load();
             _windowsPosition = config.GetValue<Rect>("Window Position");
             _audioSet = config.GetValue("_audioSet", 0);
+            _debug = config.GetValue("_debug", false);
         }
 
         private void OnDraw()
@@ -115,6 +118,8 @@ namespace LaunchCountDown
 
             GUILayout.BeginVertical(GUILayout.ExpandHeight(true));
 
+            _debug = GUILayout.Toggle(_debug, "Debug Mode", _toggleStyle);
+
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("◄", _buttonStyle))
             {
@@ -158,6 +163,8 @@ namespace LaunchCountDown
             _labelStyle = new GUIStyle(HighLogic.Skin.label);
             _labelStyle.alignment = TextAnchor.MiddleCenter;
 
+            _toggleStyle = new GUIStyle(HighLogic.Skin.toggle);
+            //_toggleStyle.alignment = TextAnchor.MiddleRight;
 
             _hasInitStyles = true;
         }
