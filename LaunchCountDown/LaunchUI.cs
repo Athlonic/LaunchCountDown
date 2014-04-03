@@ -14,6 +14,7 @@ namespace LaunchCountDown
         public static bool _buttonPushed3 = false;
         public static bool _launchSequenceIsActive = false;
         public static int _audioSet;
+        public static string _audioSet_name = "";
         public static bool _debug;
 
         public override void OnStart(PartModule.StartState state)
@@ -127,7 +128,6 @@ namespace LaunchCountDown
                 if (_audioSet < 0) _audioSet = 0;
             }
             
-            string _audioSet_name = "";
             if (_audioSet == 0) _audioSet_name = "Kerbalish";
             if (_audioSet == 1) _audioSet_name = "Apollo";
             //if (_audioSet == 2) _audioSet_name = "English";

@@ -264,6 +264,7 @@ namespace LaunchCountDown
             }
 
             if (LaunchUI._debug == true) Debug.Log("[LCD]: SetAudioClips :" + eventsource_list.Count + " events in eventsource_list");
+            Debug.Log("[LCD]: Audio set : [" + LaunchUI._audioSet_name + "] loaded.");
         }
 
         // Resgistering audioclips
