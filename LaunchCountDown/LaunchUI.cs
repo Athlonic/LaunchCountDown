@@ -12,6 +12,7 @@ namespace LaunchCountDown
         public static bool _buttonPushed = false;
         public static bool _buttonPushed2 = false;
         public static bool _buttonPushed3 = false;
+        public static bool _buttonPushed4 = false;
         public static bool _launchSequenceIsActive = false;
         public static int _audioSet;
         public static string _audioSet_name = "";
@@ -164,8 +165,7 @@ namespace LaunchCountDown
             _labelStyle.alignment = TextAnchor.MiddleCenter;
 
             _toggleStyle = new GUIStyle(HighLogic.Skin.toggle);
-            //_toggleStyle.alignment = TextAnchor.MiddleRight;
-
+            
             _hasInitStyles = true;
         }
 
@@ -185,12 +185,13 @@ namespace LaunchCountDown
         private void onSettingsPush()
         {
             RenderingManager.RemoveFromPostDrawQueue(0, new Callback(OnDraw));
+            _buttonPushed3 = true;
             RenderingManager.AddToPostDrawQueue(0, OnDraw3);
         }
         private void onBackPush()
         {
             RenderingManager.RemoveFromPostDrawQueue(0, new Callback(OnDraw3));
-            _buttonPushed3 = true;
+            _buttonPushed4 = true;
             RenderingManager.AddToPostDrawQueue(0, OnDraw);
         }
     }

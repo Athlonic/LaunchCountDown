@@ -90,10 +90,20 @@ namespace LaunchCountDown
                 AbortLaunchSequence();
             }
 
-            // Clear collections and Reload audio sets when coming from UI settings
+            // Stop All audio clips when entering settings
             if (LaunchUI._buttonPushed3 == true)
             {
                 LaunchUI._buttonPushed3 = false;
+
+                StopAllAudioclips();
+            }
+
+            // Clear collections and Reload audio sets when coming from UI settings
+            if (LaunchUI._buttonPushed4 == true)
+            {
+                LaunchUI._buttonPushed4 = false;
+
+                StopAllAudioclips();
 
                 clipsource_list.Clear();
                 eventsource_list.Clear();
@@ -169,7 +179,7 @@ namespace LaunchCountDown
                     if (LaunchUI._debug == true) Debug.Log("[LCD]: Clip Loaded, next:" + file_name + " audio clip");
                     if (LaunchUI._debug == true) Debug.Log("[LCD]: Clip Loaded, next:" + file_path + " audio clip");
                 }
-                Debug.Log("[LCD]: All clips Loaded:" + dict_clip_samples.Count + " audio clips");
+                if (LaunchUI._debug == true) Debug.Log("[LCD]: All clips Loaded:" + dict_clip_samples.Count + " audio clips");
 
                 if (LaunchUI._debug == true)
                 {
@@ -369,15 +379,7 @@ namespace LaunchCountDown
             LaunchUI._buttonPushed2 = false;
             LaunchUI._launchSequenceIsActive = true;
 
-            foreach (EventSource events in eventsource_list)
-            {
-                if (events.audiosource.isPlaying)
-                {
-                    events.audiosource.Stop();
-
-                    if (LaunchUI._debug == true) Debug.Log("[LCD]: Starting launch sequence ... Stoping :" + events.ToString());
-                }
-            }
+            StopAllAudioclips();
 
             StartCoroutine(StartCountDown());
             Debug.Log("[LCD]: Starting launch sequence ...");
@@ -388,20 +390,33 @@ namespace LaunchCountDown
             LaunchUI._buttonPushed = false;
             LaunchUI._launchSequenceIsActive = false;
 
-            foreach (ClipSource clip in clipsource_list)
-            {
-                if (clip.audiosource.isPlaying)
-                {
-                    clip.audiosource.Stop();
-
-                    if (LaunchUI._debug == true) Debug.Log("[LCD]: Aborting launch sequence ... Stoping :" + clip.ToString());
-                }
-            }
+            StopAllAudioclips();
             
             StopAllCoroutines();
             ScreenMessages.PostScreenMessage("LAUNCH ABORTED !!!", 6, ScreenMessageStyle.UPPER_CENTER);
             eventsource_list[0].event_player.audio.Play(); // Launch aborted audio
             Debug.Log("[LCD]: Launch sequence aborted.");
+        }
+
+        public void StopAllAudioclips()
+        {
+            foreach (ClipSource clip in clipsource_list)
+            {
+                if (clip.audiosource.isPlaying)
+                {
+                    clip.audiosource.Stop();
+                }
+            }
+
+            foreach (EventSource events in eventsource_list)
+            {
+                if (events.audiosource.isPlaying)
+                {
+                    events.audiosource.Stop();
+                }
+            }
+
+            if (LaunchUI._debug == true) Debug.Log("[LCD]: Stop all Audioclips.");
         }
 
         // Free up memory when unloading the part
