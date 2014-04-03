@@ -7,13 +7,16 @@ namespace LaunchCountDown
     public class LaunchUI : PartModule
     {
         private static Rect _windowsPosition = new Rect();
-        private GUIStyle _windowStyle, _buttonStyle, _labelStyle;
+        private GUIStyle _windowStyle, _buttonStyle, _labelStyle, _toggleStyle;
         private bool _hasInitStyles = false;
         public static bool _buttonPushed = false;
         public static bool _buttonPushed2 = false;
         public static bool _buttonPushed3 = false;
+        public static bool _buttonPushed4 = false;
         public static bool _launchSequenceIsActive = false;
         public static int _audioSet;
+        public static string _audioSet_name = "";
+        public static bool _debug;
 
         public override void OnStart(PartModule.StartState state)
         {
@@ -33,6 +36,7 @@ namespace LaunchCountDown
 
             config.SetValue("_audioSet", _audioSet);
             config.SetValue("Window Position", _windowsPosition);
+            config.SetValue("_debug", _debug);
             config.save();
         }
 
@@ -43,6 +47,7 @@ namespace LaunchCountDown
             config.load();
             _windowsPosition = config.GetValue<Rect>("Window Position");
             _audioSet = config.GetValue("_audioSet", 0);
+            _debug = config.GetValue("_debug", false);
         }
 
         private void OnDraw()
@@ -115,6 +120,8 @@ namespace LaunchCountDown
 
             GUILayout.BeginVertical(GUILayout.ExpandHeight(true));
 
+            _debug = GUILayout.Toggle(_debug, "Debug Mode", _toggleStyle);
+
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("◄", _buttonStyle))
             {
@@ -122,7 +129,6 @@ namespace LaunchCountDown
                 if (_audioSet < 0) _audioSet = 0;
             }
             
-            string _audioSet_name = "";
             if (_audioSet == 0) _audioSet_name = "Kerbalish";
             if (_audioSet == 1) _audioSet_name = "Apollo";
             //if (_audioSet == 2) _audioSet_name = "English";
@@ -158,7 +164,8 @@ namespace LaunchCountDown
             _labelStyle = new GUIStyle(HighLogic.Skin.label);
             _labelStyle.alignment = TextAnchor.MiddleCenter;
 
-
+            _toggleStyle = new GUIStyle(HighLogic.Skin.toggle);
+            
             _hasInitStyles = true;
         }
 
@@ -178,12 +185,13 @@ namespace LaunchCountDown
         private void onSettingsPush()
         {
             RenderingManager.RemoveFromPostDrawQueue(0, new Callback(OnDraw));
+            _buttonPushed3 = true;
             RenderingManager.AddToPostDrawQueue(0, OnDraw3);
         }
         private void onBackPush()
         {
             RenderingManager.RemoveFromPostDrawQueue(0, new Callback(OnDraw3));
-            _buttonPushed3 = true;
+            _buttonPushed4 = true;
             RenderingManager.AddToPostDrawQueue(0, OnDraw);
         }
     }

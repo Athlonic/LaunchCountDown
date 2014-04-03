@@ -1,5 +1,5 @@
-[0.23.0] Athlonic Electronics / LCD - Launch CountDown (Audio&Onscreen)
-v1.7 (March 30/2014)
+[0.23.5] Athlonic Electronics / LCD - Launch CountDown (Audio&Onscreen)
+v1.7.1 (April 03/2014)
 
 
 Bored of yelling the launch countdown yourself ?
@@ -52,6 +52,12 @@ Known issues :
 
 ________________________________________________________
 Changelog :
+
+v 1.7.1 :
+- Recompiled for KSP 0.23.5 (to be on the safe side)
+- Added frizzank's FASA launchclamps compatibility (ModuleManager cfg)
+- Added a Debug option (spam the log with useless stuff)
+- Audioclips stop when entering settings
 
 v 1.7 :
 - Added back Kerbalized audio set (made it default)
