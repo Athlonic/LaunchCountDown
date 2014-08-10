@@ -1,5 +1,5 @@
-[0.23.5] Athlonic Electronics / LCD - Launch CountDown (Audio&Onscreen)
-v1.7.1 (April 03/2014)
+[0.24.2] Athlonic Electronics / LCD - Launch CountDown (Audio&Onscreen)
+v1.7.2 (August 10/2014)
 
 
 Bored of yelling the launch countdown yourself ?
@@ -52,6 +52,13 @@ Known issues :
 
 ________________________________________________________
 Changelog :
+
+v 1.7.2 :
+- Recompiled for KSP 0.24.2
+- Fixed FASA Apollo/Atlas launchclamps  support
+Known issue : 
+- countdown sequence pause every seconds in KSP x64 (32bit is fine)
+(under investigation)
 
 v 1.7.1 :
 - Recompiled for KSP 0.23.5 (to be on the safe side)

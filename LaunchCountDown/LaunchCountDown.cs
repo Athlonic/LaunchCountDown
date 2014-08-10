@@ -1,6 +1,5 @@
 ﻿// Kerbal Space Program Launcher countdown plug-in by Athlonic
 // Licensed under CC BY 3.0 terms: http://creativecommons.org/licenses/by-nc-sa/3.0/
-// v 1.7.1
 
 
 using System;
@@ -352,9 +351,10 @@ namespace LaunchCountDown
 
                         if (LaunchUI._debug == true) Debug.Log("[LCD]: StartCountDown(), playing : " + (clip_counter + 1) + "audio clip.");
                     }
-                }               
+                }
 
                 yield return new WaitForSeconds(1.0f);
+                if (LaunchUI._debug == true) Debug.Log("[LCD]: StartCountDown() : WaitForSeconds 1");
             }
 
             if (LaunchUI._launchSequenceIsActive && clip_counter < 0)
