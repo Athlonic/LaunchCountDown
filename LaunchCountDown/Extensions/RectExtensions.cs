@@ -14,5 +14,13 @@ namespace LaunchCountDown.Extensions
 
             return thisRect;
         }
+
+        public static Rect DockScreen(this Rect thisRect)
+        {
+            thisRect.x = Input.mousePosition.x - thisRect.width / 2;
+            thisRect.y = 40f;
+            
+            return thisRect;
+        }
     }
 }
