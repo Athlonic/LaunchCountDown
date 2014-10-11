@@ -1,0 +1,68 @@
+Changelog :
+
+v 1.7.3 :
+- Recompiled for KSP 0.25
+- Added KSP AVC version checking mod support
+
+v 1.7.2 :
+- Recompiled for KSP 0.24.2
+- Fixed FASA Apollo/Atlas launchclamps  support
+Known issue : 
+- countdown sequence pause every seconds in KSP x64 (32bit is fine)
+(under investigation)
+
+v 1.7.1 :
+- Recompiled for KSP 0.23.5 (to be on the safe side)
+- Added frizzank's FASA launchclamps compatibility (ModuleManager cfg)
+- Added a Debug option (spam the log with useless stuff)
+- Audioclips stop when entering settings
+
+v 1.7 :
+- Added back Kerbalized audio set (made it default)
+- Plugin now clear audio collections on part unload to free up memory
+
+v 1.6.1 (Hotfix) :
+- Fixed issue where audio clips were loaded for each instance of launchclamp part.
+
+v 1.6 :
+- Rewritten the code using 'Collections' to manage audio files
+- This also fixed the desync sequence issue when using heavy ship/mods
+- Added some screen messages accordingly to the launch sequence events
+- disabled "Kerbalized" & "Default" audio set for now (better Kerbalized version in the work)
+
+v 1.5 :
+- recompiled/checked for KSP v0.23 compatibility
+- targeting .NET 3.5 instead of 4.5
+- including ModuleManager v1.5
+
+v 1.4 :
+- Added Kerbalized audio (first pass) 
+
+v 1.3 :
+- Made audio sequences being tied to "voices" volume setting instead of engines
+- Also made audio 2D+panLevel 0 to avoid weird sounds issues when zooming view
+- Added "Apollo Style" launch sequence
+- Added a setting window allowing to choose launch sequences
+- updated with Module Manager 4992.21296 (Sarbian's version)
+
+v 1.2 :
+- Added an "Abort Launch !" button,
+- Reduced the size of the UI.
+
+v 1.1 :
+- Fixed, issue when multiple launch clamp parts was present (Cybutek "using static var" trick),
+- Replaced 'right-click' on launch clamp by an UI Launch button,
+- Made the new UI button position persistent when dragged,
+- Made the new UI button to recenter if it goes off screen on resolution change,
+- Some code cleaning, optimizations.
+
+v 1.0 : Initial release.
+
+________________________________________________________
+(To do list) :
+- auto-detect if no engines are on the current stage to avoid wounds,
+- add a KSP ApplicationLauncher button
+- polish the GUI
+- add a (better) Kerbalish countdown, Chatterer style,
+- add an advanced mode with detailed launch procedures (checks, engine ignition, ...),
+- learn to code properly and optimize methods...
