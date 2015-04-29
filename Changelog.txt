@@ -1,5 +1,9 @@
 Changelog :
 
+v 1.7.4 [29 Apr 2015] :
+- Recompiled for KSP 1.0
+- packaged with uptodate ModuleManager v1.6.2
+
 v 1.7.3 :
 - Recompiled for KSP 0.25
 - Added KSP AVC version checking mod support
