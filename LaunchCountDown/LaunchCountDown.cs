@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using LaunchCountDown.Extensions;
 using UnityEngine;
+using KSP.UI.Screens;
 
 namespace LaunchCountDown
 {
@@ -368,7 +369,7 @@ namespace LaunchCountDown
                 eventsource_list[2].audiosource.PlayDelayed(0.8f); // Liftoff audio
                 eventsource_list[3].audiosource.PlayDelayed(3.0f); // Tower cleared audio
 
-                Staging.ActivateNextStage();
+                StageManager.ActivateNextStage();
             }            
         }
 
