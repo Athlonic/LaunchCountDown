@@ -331,7 +331,7 @@ namespace LaunchCountDown
 
                         clip_counter--;
 
-                        clipsource_list[clip_counter + 1].clip_player.audio.Play();
+                        clipsource_list[clip_counter + 1].audiosource.Play();
 
                         if (LaunchUI._debug == true) Debug.Log("[LCD]: StartCountDown(), playing : " + (clip_counter + 1) + "audio clip.");
                     }
@@ -347,7 +347,7 @@ namespace LaunchCountDown
 
                         clip_counter--;
 
-                        clipsource_list[clip_counter + 1].clip_player.audio.Play();
+                        clipsource_list[clip_counter + 1].audiosource.Play();
 
                         if (LaunchUI._debug == true) Debug.Log("[LCD]: StartCountDown(), playing : " + (clip_counter + 1) + "audio clip.");
                     }
@@ -360,13 +360,13 @@ namespace LaunchCountDown
             if (LaunchUI._launchSequenceIsActive && clip_counter < 0)
             {
                 ScreenMessages.PostScreenMessage("All engines running...", 1.0f, ScreenMessageStyle.UPPER_CENTER);
-                eventsource_list[1].event_player.audio.Play(); // All engine running audio
+                eventsource_list[1].audiosource.Play(); // All engine running audio
 
                 yield return new WaitForSeconds(1.0f);
 
                 ScreenMessages.PostScreenMessage("LIFTOFF !", 2.0f, ScreenMessageStyle.UPPER_CENTER);
-                eventsource_list[2].event_player.audio.PlayDelayed(0.8f); // Liftoff audio
-                eventsource_list[3].event_player.audio.PlayDelayed(3.0f); // Tower cleared audio
+                eventsource_list[2].audiosource.PlayDelayed(0.8f); // Liftoff audio
+                eventsource_list[3].audiosource.PlayDelayed(3.0f); // Tower cleared audio
 
                 Staging.ActivateNextStage();
             }            
@@ -394,7 +394,7 @@ namespace LaunchCountDown
             
             StopAllCoroutines();
             ScreenMessages.PostScreenMessage("LAUNCH ABORTED !!!", 6, ScreenMessageStyle.UPPER_CENTER);
-            eventsource_list[0].event_player.audio.Play(); // Launch aborted audio
+            eventsource_list[0].audiosource.Play(); // Launch aborted audio
             Debug.Log("[LCD]: Launch sequence aborted.");
         }
 
