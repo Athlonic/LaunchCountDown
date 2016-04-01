@@ -242,7 +242,7 @@ namespace LaunchCountDown
                 //clipsource_list[x].clip_name = clipsource_list.Count.ToString();
                 clipsource_list[x].audiosource = clipsource_list[x].clip_player.AddComponent<AudioSource>();
                 clipsource_list[x].audiosource.volume = GameSettings.VOICE_VOLUME;
-                clipsource_list[x].audiosource.panLevel = 0;
+                clipsource_list[x].audiosource.spatialBlend = 0.0f;
                 clipsource_list[x].current_clip = "Default";
 
                 if (dict_clip_samples.Count > 0)
@@ -263,7 +263,7 @@ namespace LaunchCountDown
                 //eventsource_list[x].clip_name = eventsource_list.Count.ToString();
                 eventsource_list[x].audiosource = eventsource_list[x].event_player.AddComponent<AudioSource>();
                 eventsource_list[x].audiosource.volume = GameSettings.VOICE_VOLUME;
-                eventsource_list[x].audiosource.panLevel = 0;
+                eventsource_list[x].audiosource.spatialBlend = 0.0f;
                 eventsource_list[x].current_event = "Default";
 
                 if (dict_event_samples.Count > 0)
