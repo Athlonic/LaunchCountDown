@@ -92,7 +92,7 @@ namespace LaunchCountDown
             // Stop All audio clips when entering settings
             if (LaunchUI._buttonPushed3 == true)
             {
-                LaunchUI._buttonPushed3 = false;
+                //LaunchUI._buttonPushed3 = false;
 
                 StopAllAudioclips();
             }

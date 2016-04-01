@@ -26,7 +26,7 @@ namespace LaunchCountDown
                 _launchSequenceIsActive = false;
                 _buttonPushed = false;
                 _buttonPushed2 = false;
-                RenderingManager.AddToPostDrawQueue(0, OnDraw);
+                //RenderingManager.AddToPostDrawQueue(0, OnDraw);
             }
         }
 
@@ -48,6 +48,15 @@ namespace LaunchCountDown
             _windowsPosition = config.GetValue<Rect>("Window Position");
             _audioSet = config.GetValue("_audioSet", 0);
             _debug = config.GetValue("_debug", false);
+        }
+
+        private void OnGUI()
+        {
+            OnDraw();
+
+            if (_buttonPushed == true) OnDraw2();
+            if (_buttonPushed2 == true || _buttonPushed4 == true) OnDraw();
+            if (_buttonPushed3 == true) OnDraw3();
         }
 
         private void OnDraw()
@@ -171,28 +180,29 @@ namespace LaunchCountDown
 
         private void onButtonPush()
         {
-            RenderingManager.RemoveFromPostDrawQueue(0, new Callback(OnDraw));
+            //RenderingManager.RemoveFromPostDrawQueue(0, new Callback(OnDraw));
             _buttonPushed = true;
-            RenderingManager.AddToPostDrawQueue(0, OnDraw2);
+            //RenderingManager.AddToPostDrawQueue(0, OnDraw2);
         }
 
         private void onButtonPush2()
         {
-            RenderingManager.RemoveFromPostDrawQueue(0, new Callback(OnDraw2));
+            //RenderingManager.RemoveFromPostDrawQueue(0, new Callback(OnDraw2));
             _buttonPushed2 = true;
-            RenderingManager.AddToPostDrawQueue(0, OnDraw);
+            //RenderingManager.AddToPostDrawQueue(0, OnDraw);
         }
         private void onSettingsPush()
         {
-            RenderingManager.RemoveFromPostDrawQueue(0, new Callback(OnDraw));
+            //RenderingManager.RemoveFromPostDrawQueue(0, new Callback(OnDraw));
             _buttonPushed3 = true;
-            RenderingManager.AddToPostDrawQueue(0, OnDraw3);
+            //RenderingManager.AddToPostDrawQueue(0, OnDraw3);
         }
         private void onBackPush()
         {
-            RenderingManager.RemoveFromPostDrawQueue(0, new Callback(OnDraw3));
+            //RenderingManager.RemoveFromPostDrawQueue(0, new Callback(OnDraw3));
             _buttonPushed4 = true;
-            RenderingManager.AddToPostDrawQueue(0, OnDraw);
+            _buttonPushed3 = false;
+            //RenderingManager.AddToPostDrawQueue(0, OnDraw);
         }
     }
 }
