@@ -9,6 +9,7 @@ namespace LaunchCountDown
         private static Rect _windowsPosition = new Rect();
         private GUIStyle _windowStyle, _buttonStyle, _labelStyle, _toggleStyle;
         private bool _hasInitStyles = false;
+        private bool _isInEditor = false;
         public static bool _buttonPushed = false;
         public static bool _buttonPushed2 = false;
         public static bool _buttonPushed3 = false;
@@ -22,12 +23,14 @@ namespace LaunchCountDown
         {
             if (state != StartState.Editor)
             {
+                _isInEditor = false;
                 if (!_hasInitStyles) InitStyles();
                 _launchSequenceIsActive = false;
                 _buttonPushed = false;
                 _buttonPushed2 = false;
                 //RenderingManager.AddToPostDrawQueue(0, OnDraw);
             }
+            else _isInEditor = true;
         }
 
         public override void OnSave(ConfigNode node)
@@ -52,11 +55,14 @@ namespace LaunchCountDown
 
         private void OnGUI()
         {
-            OnDraw();
+            if (_isInEditor == false)
+            {
+                OnDraw();
 
-            if (_buttonPushed == true) OnDraw2();
-            if (_buttonPushed2 == true || _buttonPushed4 == true) OnDraw();
-            if (_buttonPushed3 == true) OnDraw3();
+                if (_buttonPushed == true) OnDraw2();
+                if (_buttonPushed2 == true || _buttonPushed4 == true) OnDraw();
+                if (_buttonPushed3 == true) OnDraw3();
+            }
         }
 
         private void OnDraw()
