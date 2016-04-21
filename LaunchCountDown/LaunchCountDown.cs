@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using LaunchCountDown.Extensions;
 using UnityEngine;
+using KSP.UI.Screens;
 
 namespace LaunchCountDown
 {
@@ -92,7 +93,7 @@ namespace LaunchCountDown
             // Stop All audio clips when entering settings
             if (LaunchUI._buttonPushed3 == true)
             {
-                LaunchUI._buttonPushed3 = false;
+                //LaunchUI._buttonPushed3 = false;
 
                 StopAllAudioclips();
             }
@@ -242,7 +243,7 @@ namespace LaunchCountDown
                 //clipsource_list[x].clip_name = clipsource_list.Count.ToString();
                 clipsource_list[x].audiosource = clipsource_list[x].clip_player.AddComponent<AudioSource>();
                 clipsource_list[x].audiosource.volume = GameSettings.VOICE_VOLUME;
-                clipsource_list[x].audiosource.panLevel = 0;
+                clipsource_list[x].audiosource.spatialBlend = 0.0f;
                 clipsource_list[x].current_clip = "Default";
 
                 if (dict_clip_samples.Count > 0)
@@ -263,7 +264,7 @@ namespace LaunchCountDown
                 //eventsource_list[x].clip_name = eventsource_list.Count.ToString();
                 eventsource_list[x].audiosource = eventsource_list[x].event_player.AddComponent<AudioSource>();
                 eventsource_list[x].audiosource.volume = GameSettings.VOICE_VOLUME;
-                eventsource_list[x].audiosource.panLevel = 0;
+                eventsource_list[x].audiosource.spatialBlend = 0.0f;
                 eventsource_list[x].current_event = "Default";
 
                 if (dict_event_samples.Count > 0)
@@ -331,7 +332,7 @@ namespace LaunchCountDown
 
                         clip_counter--;
 
-                        clipsource_list[clip_counter + 1].clip_player.audio.Play();
+                        clipsource_list[clip_counter + 1].audiosource.Play();
 
                         if (LaunchUI._debug == true) Debug.Log("[LCD]: StartCountDown(), playing : " + (clip_counter + 1) + "audio clip.");
                     }
@@ -347,7 +348,7 @@ namespace LaunchCountDown
 
                         clip_counter--;
 
-                        clipsource_list[clip_counter + 1].clip_player.audio.Play();
+                        clipsource_list[clip_counter + 1].audiosource.Play();
 
                         if (LaunchUI._debug == true) Debug.Log("[LCD]: StartCountDown(), playing : " + (clip_counter + 1) + "audio clip.");
                     }
@@ -360,15 +361,15 @@ namespace LaunchCountDown
             if (LaunchUI._launchSequenceIsActive && clip_counter < 0)
             {
                 ScreenMessages.PostScreenMessage("All engines running...", 1.0f, ScreenMessageStyle.UPPER_CENTER);
-                eventsource_list[1].event_player.audio.Play(); // All engine running audio
+                eventsource_list[1].audiosource.Play(); // All engine running audio
 
                 yield return new WaitForSeconds(1.0f);
 
                 ScreenMessages.PostScreenMessage("LIFTOFF !", 2.0f, ScreenMessageStyle.UPPER_CENTER);
-                eventsource_list[2].event_player.audio.PlayDelayed(0.8f); // Liftoff audio
-                eventsource_list[3].event_player.audio.PlayDelayed(3.0f); // Tower cleared audio
+                eventsource_list[2].audiosource.PlayDelayed(0.8f); // Liftoff audio
+                eventsource_list[3].audiosource.PlayDelayed(3.0f); // Tower cleared audio
 
-                Staging.ActivateNextStage();
+                StageManager.ActivateNextStage();
             }            
         }
 
@@ -394,7 +395,7 @@ namespace LaunchCountDown
             
             StopAllCoroutines();
             ScreenMessages.PostScreenMessage("LAUNCH ABORTED !!!", 6, ScreenMessageStyle.UPPER_CENTER);
-            eventsource_list[0].event_player.audio.Play(); // Launch aborted audio
+            eventsource_list[0].audiosource.Play(); // Launch aborted audio
             Debug.Log("[LCD]: Launch sequence aborted.");
         }
 
