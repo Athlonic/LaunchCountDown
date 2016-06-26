@@ -1,5 +1,14 @@
 Changelog :
 
+v1.7.7 [26 Jun 2016]
+- Recompiled and updated for KSP v1.1.3 (b1289)
+- Bundled Modulemanager v2.6.25
+
+v1.7.6 [19 Apr. 2016]
+- Recompiled and updated for KSP v1.1 (b1230)
+- Bundled Modulemanager v2.6.22
+- Bundled MiniAVC v1.0.3.2
+
 v 1.7.5 [02 May 2015] :
 - Recompiled for KSP v1.0.2
 
