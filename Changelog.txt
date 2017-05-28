@@ -1,5 +1,8 @@
 Changelog :
 
+v1.7.9 [28 May 2017]
+- Recompiled for KSP v1.3.0 (b1804)
+
 v1.7.8 [12 Oct 2016]
 - Recompiled for KSP v1.2.0 (b1586)
 - Removed KSPUtil reference
