@@ -1,5 +1,9 @@
 Changelog :
 
+v1.8.0 [23 Oct 2019]
+- Fixed errors (due to Refs .dll split & Net 4.x target)
+- Recompiled for KSP v1.8.0.2686
+
 v1.7.9 [28 May 2017]
 - Recompiled for KSP v1.3.0 (b1804)
 
